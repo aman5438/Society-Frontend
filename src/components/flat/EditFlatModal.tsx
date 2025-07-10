@@ -41,7 +41,7 @@ export default function EditFlatModal({ isOpen, flat, onClose, onUpdated }: Prop
   const onSubmit = async (data: { type: string; status: string }) => {
     try {
       await api.put(`/admin/flats/${flat?.id}`, data);
-      onUpdated();
+      await onUpdated();
       onClose();
     } catch (err) {
       const axiosError = err as AxiosError<{ message?: string }>;

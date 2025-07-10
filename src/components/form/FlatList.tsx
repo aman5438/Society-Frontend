@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FlatCard from './FlatCard';
 import EditFlatModal from '../flat/EditFlatModal';
 import DeleteFlatModal from '../flat/DeleteFlatModal';
@@ -13,17 +13,19 @@ type Flat = {
   tenant?: { name: string };
 };
 
-type Props = {
-  flats: Flat[];
-};
-
-export default function FlatList({ flats }: Props) {
+export default function FlatList() {
+  const [flats, setFlats] = useState<Flat[]>([]);
   const [selectedFlat, setSelectedFlat] = useState<Flat | null>(null);
   const [modalType, setModalType] = useState<'edit' | 'delete' | null>(null);
 
-  if (flats.length === 0) {
-    return <p className="text-center text-gray-500">No flats found.</p>;
-  }
+  const fetchFlats = async () => {
+    const res = await api.get('/admin/flats');
+    setFlats(res.data);
+  };
+
+  useEffect(() => {
+    fetchFlats();
+  }, []);
 
   const openEditModal = (flat: Flat) => {
     setSelectedFlat(flat);
@@ -40,15 +42,10 @@ export default function FlatList({ flats }: Props) {
     setModalType(null);
   };
 
-  const fetchFlats = async () => {
-    const res = await api.get('/admin/flats');
-    setSelectedFlat(res.data);
-  };
-
   const handleDelete = async () => {
     try {
       await api.delete(`/admin/flats/${selectedFlat?.id}`);
-      fetchFlats();
+      await fetchFlats();
       closeModal();
     } catch {
       alert('Failed to delete flat');
@@ -57,6 +54,12 @@ export default function FlatList({ flats }: Props) {
 
   return (
     <>
+    {flats.length === 0 ? (
+      <div className="bg-white p-6 rounded-lg shadow-md text-center col-span-full">
+        <h2 className="text-lg font-semibold text-gray-700">No Flats Found</h2>
+        <p className="text-gray-500 mt-2">You haven&apos;t added any flats yet.</p>
+      </div>
+    ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {flats.map((flat) => (
           <FlatCard
@@ -71,6 +74,8 @@ export default function FlatList({ flats }: Props) {
           />
         ))}
       </div>
+    )}
+
       <EditFlatModal
         isOpen={modalType === 'edit'}
         flat={selectedFlat}
