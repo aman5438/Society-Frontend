@@ -27,7 +27,10 @@ export default function SignupRequestList({ requests, handleApprove, handleRejec
           email={req.user.email}
           flatNumber={req.flatNumber}
           role={req.role}
-          documents={req.documents}
+          documents={req.documents.map((file: File) => ({
+            url: URL.createObjectURL(file),
+            originalName: file.name,
+          }))}
           onApprove={() => handleApprove(req.id)}
           onReject={() => handleReject(req.id)}
         />

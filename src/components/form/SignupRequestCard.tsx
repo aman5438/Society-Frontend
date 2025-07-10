@@ -5,10 +5,16 @@ type Props = {
   email: string;
   flatNumber: string;
   role: string;
-  documents: File[];
+  documents: DocumentFile[];
   onApprove: () => void;
   onReject: () => void;
 };
+
+type DocumentFile = {
+  url: string;
+  originalName: string;
+};
+
 
 export default function SignupRequestCard({
   name,
@@ -39,8 +45,22 @@ export default function SignupRequestCard({
       </p>
 
       {documents?.length > 0 && (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-gray-500 mt-2">
           📎 {documents.length} document{documents.length > 1 ? 's' : ''}
+          <ul className="list-disc list-inside mt-1 space-y-1">
+            {documents.map((doc: DocumentFile, index: number) => (
+              <li key={index}>
+                <a
+                  href={doc.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  {doc.originalName}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 

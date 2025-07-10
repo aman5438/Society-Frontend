@@ -11,6 +11,7 @@ export default function AdminDashboard() {
     flats: 0,
     societies: 0,
     nocRequests: 0,
+    maintenanceRequests: 0,
   });
 
   useEffect(() => {
@@ -48,6 +49,12 @@ export default function AdminDashboard() {
           count={stats.nocRequests}
           linkText="Review NOC"
           linkUrl="/admin/noc-requests"
+        />
+        <DashboardCard
+          title="Maintenance Requests"
+          count={stats.maintenanceRequests}
+          linkText="Review Maintenance"
+          linkUrl="/admin/maintenance-requests"
         />
       </main>
     </div>
