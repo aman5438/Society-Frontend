@@ -45,7 +45,7 @@ export default function EditProfile() {
     const onSubmit = async (data: ProfileForm) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await api.put('/admin/me', data, {
+            await api.put('/admin/me', data, {
             headers: { Authorization: `Bearer ${token}` },
             });
             setMessage('Profile updated successfully');

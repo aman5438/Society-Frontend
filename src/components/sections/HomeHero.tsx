@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function HomeHero() {
   return (
@@ -18,9 +19,11 @@ export default function HomeHero() {
       </Link>
 
       <div className="mt-12">
-        <img
+        <Image
           src="/home.gif"
           alt="Society illustration"
+          width={400}
+          height={300}
           className="w-full max-w-md"
         />
       </div>
