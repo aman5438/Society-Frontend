@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import api from '@/lib/axios';
 import { Loader2 } from 'lucide-react';

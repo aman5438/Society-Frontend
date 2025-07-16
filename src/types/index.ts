@@ -53,3 +53,9 @@ export interface Flat {
     societyCode: string;
   };
 };
+
+export interface TenantUser {
+  name: string;
+  email: string;
+  phone: string;
+};

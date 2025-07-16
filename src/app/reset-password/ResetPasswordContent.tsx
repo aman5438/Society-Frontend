@@ -1,4 +1,6 @@
-import { useRouter } from 'next/router';
+"use client";
+
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import api from '@/lib/axios';
@@ -10,28 +12,28 @@ type ResetForm = {
   newPassword: string;
 };
 
-export default function ResetPasswordPage() {
+export default function ResetPasswordContent() {
   const { register, handleSubmit } = useForm<ResetForm>();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const queryToken = router.query.token as string;
-
-    if (queryToken) {
-        setToken(queryToken);
-        localStorage.setItem('reset_token', queryToken);
-        router.replace('/reset-password');
-    } else {
-        const storedToken = localStorage.getItem('reset_token');
-        if (storedToken) {
-        setToken(storedToken);
-      } 
-     }
-  }, [router, router.query.token]);
-
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const queryToken = searchParams ? searchParams.get('token') : null;
+
+    if (queryToken) {
+      setToken(queryToken);
+      localStorage.setItem('reset_token', queryToken);
+      router.replace('/reset-password');
+    } else {
+      const storedToken = localStorage.getItem('reset_token');
+      if (storedToken) {
+        setToken(storedToken);
+      }
+    }
+  }, [router, searchParams]);
 
   const onSubmit = async (data: ResetForm) => {
     try {
@@ -54,7 +56,7 @@ export default function ResetPasswordPage() {
 
         <Input
           register={register}
-          name= "newPassword"
+          name="newPassword"
           type="password"
           placeholder="New Password"
           className="w-full p-2 border border-gray-300 rounded"

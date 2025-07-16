@@ -44,7 +44,7 @@ export default function SignupRequestCard({
         Role: {role}
       </p>
 
-      {documents?.length > 0 && (
+      {documents?.length > 0 ? (
         <div className="text-sm text-gray-500 mt-2">
           📎 {documents.length} document{documents.length > 1 ? 's' : ''}
           <ul className="list-disc list-inside mt-1 space-y-1">
@@ -62,12 +62,15 @@ export default function SignupRequestCard({
             ))}
           </ul>
         </div>
+      ) : (
+        <p className="text-sm text-red-500 mt-2 font-medium">⚠️ No document uploaded</p>
       )}
 
       <div className="flex gap-4 mt-4">
         <button
           onClick={onApprove}
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          disabled={documents.length === 0}
         >
           Approve
         </button>

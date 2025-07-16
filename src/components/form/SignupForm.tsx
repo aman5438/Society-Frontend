@@ -1,12 +1,13 @@
 'use client';
+
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import Button from '@/components/ui/Button';
 import FileUpload from '../ui/FileUpload';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import SocietySelect from '@/components/form/SocietySelect';
 import { FlatSelect } from './FlatSelect';
 import { SignupFormData } from '@/types';
@@ -15,14 +16,52 @@ import { AxiosError } from 'axios';
 export default function SignupForm() {
   const { register, handleSubmit, watch } = useForm<SignupFormData>();
   const router = useRouter();
-  const selectedSocietyId = watch('society');
-
   const fileRef = useRef<HTMLInputElement | null>(null);
 
+  const [fileError, setFileError] = useState(false);
+  const [fileUploaded, setFileUploaded] = useState(false);
+
+  // Track file input changes using event listener
+  useEffect(() => {
+    const input = fileRef.current;
+
+    const handleFileChange = () => {
+      const hasFile = !!fileRef.current?.files?.length;
+      setFileUploaded(hasFile);
+    };
+
+    if (input) {
+      input.addEventListener('change', handleFileChange);
+    }
+
+    return () => {
+      if (input) {
+        input.removeEventListener('change', handleFileChange);
+      }
+    };
+  }, []);
+
+  const society = watch('society');
+  const fullname = watch('fullname');
+  const email = watch('email');
+  const password = watch('password');
+  const phone = watch('phone');
+  const flat = watch('flat');
+  const role = watch('role');
+
+  const selectedSocietyId = Number(society);
+
+  const isFormValid =
+    society && fullname && email && password && phone && flat && role && fileUploaded;
+
   const onSubmit = async (data: SignupFormData) => {
+    if (!fileRef.current?.files?.length) {
+      setFileError(true);
+      return;
+    }
+    setFileError(false);
+
     const formData = new FormData();
-
-
     formData.append('societyId', String(parseInt(data.society)));
     formData.append('name', data.fullname);
     formData.append('password', data.password);
@@ -31,16 +70,10 @@ export default function SignupForm() {
     formData.append('flatNumber', String(parseInt(data.flat)));
     formData.append('role', data.role.toUpperCase());
 
-
     if (fileRef.current?.files?.[0]) {
       formData.append('document', fileRef.current.files[0]);
     }
-  
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
 
-    
     try {
       await api.post('/auth/signup', formData, {
         headers: {
@@ -67,9 +100,9 @@ export default function SignupForm() {
       <SocietySelect name="society" register={register} />
       <Input register={register} name="fullname" placeholder="Full Name" />
       <Input register={register} name="email" placeholder="Email" type="email" />
-      <Input register={register} name='password' placeholder='Password' type='password' />
+      <Input register={register} name="password" placeholder="Password" type="password" />
       <Input register={register} name="phone" placeholder="Phone" />
-      <FlatSelect name="flat" register={register} societyId={Number(selectedSocietyId)} />
+      <FlatSelect name="flat" register={register} societyId={selectedSocietyId} />
 
       <Select
         register={register}
@@ -86,8 +119,11 @@ export default function SignupForm() {
         accept=".pdf,.doc,.docx,.jpg,.png"
         inputRef={fileRef}
       />
+      {fileError && (
+        <p className="text-red-500 text-sm mt-1">Document is required</p>
+      )}
 
-      <Button label="Sign Up" />
+      <Button label="Sign Up" disabled={!isFormValid} />
     </form>
   );
 }

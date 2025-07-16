@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import SignupRequestList from '@/components/form/SignupRequestList';
 import { SignupRequest } from '@/types';
 import api from '@/lib/axios';
-import { useRouter } from 'next/router';
-import Navbar from '@/components/layout/Navbar';
+import { useRouter } from 'next/navigation';
 
 export default function SignupRequestsPage() {
   const [requests, setRequests] = useState<SignupRequest[]>([]);
@@ -37,7 +36,6 @@ export default function SignupRequestsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-        <Navbar />
         <main className="max-w-7xl mx-auto p-6">
             <SignupRequestList
                 requests={requests}

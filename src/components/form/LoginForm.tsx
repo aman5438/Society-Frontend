@@ -1,5 +1,7 @@
+'use client';
+
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
+import { useRouter }  from 'next/navigation';
 import Button from '../ui/Button';
 import api from '@/lib/axios';
 import Input from '../ui/Input';

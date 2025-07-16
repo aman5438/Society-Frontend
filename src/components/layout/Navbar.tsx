@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import HomeIcon from '@heroicons/react/24/solid/esm/HomeIcon';
 
 export default function Navbar() {
@@ -34,10 +34,16 @@ export default function Navbar() {
       </Link>
 
     <div className="space-x-4">
-      {role === 'SOCIETY_ADMIN' || role === 'FLAT_OWNER' ? (
+      {role === 'SOCIETY_ADMIN' || role === 'FLAT_OWNER' || role === 'TENANT' ? (
         <>
           <Link
-            href={role === 'SOCIETY_ADMIN' ? '/admin' : '/owner'}
+            href={
+              role === 'SOCIETY_ADMIN'
+                ? '/admin'
+                : role === 'FLAT_OWNER'
+                ? '/owner'
+                : '/tenant'
+            }
             className="text-gray-700 hover:text-indigo-600"
           >
             Dashboard

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
 import SocietyCard from '@/components/admin/SocietyCard';
 import api from '@/lib/axios';
 
@@ -30,7 +29,6 @@ export default function AdminSocieties() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
       <main className="max-w-7xl mx-auto p-6">
         <h1 className="text-2xl font-bold mb-6">Registered Societies</h1>
 
